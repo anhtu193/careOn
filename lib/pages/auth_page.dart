@@ -1,4 +1,5 @@
 import 'package:care_on/pages/home_page.dart';
+import 'package:care_on/pages/login_or_register.dart';
 import 'package:care_on/pages/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ class AuthPage extends StatelessWidget {
           }
           //user is NOT logged in
           else {
-            return LoginPage();
+            return LoginOrRegisterPage();
           }
         },
       ),

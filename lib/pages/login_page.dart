@@ -5,7 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({super.key});
+  final Function()? onTap;
+  LoginPage({super.key, required this.onTap});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -38,12 +39,12 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.pop(context);
       // WRONG EMAIL
       if (e.code == 'invalid-credential') {
-        wrongEmailMessage();
+        signInErrorMessage();
       }
     }
   }
 
-  void wrongEmailMessage() {
+  void signInErrorMessage() {
     showDialog(
       context: context,
       builder: (context) {
@@ -158,12 +159,15 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(
                     width: 4,
                   ),
-                  Text(
-                    "Đăng kí ngay",
-                    style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xff3ab5ff)),
+                  GestureDetector(
+                    onTap: widget.onTap,
+                    child: Text(
+                      "Đăng kí ngay",
+                      style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xff3ab5ff)),
+                    ),
                   )
                 ],
               )

@@ -1,6 +1,7 @@
 import 'package:care_on/components/sign_in_button.dart';
 import 'package:care_on/components/square_tile.dart';
 import 'package:care_on/components/textfield.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -22,6 +23,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   final repeatPasswordController = TextEditingController();
 
+  final FirebaseAuth auth = FirebaseAuth.instance;
   //sign user up
   void signUserUp() async {
     // show loading circle
@@ -35,11 +37,15 @@ class _RegisterPageState extends State<RegisterPage> {
     );
     //try creating user
     try {
+      //create User
       if (passwordController.text == repeatPasswordController.text) {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: emailController.text, password: passwordController.text);
+            email: emailController.text.trim(),
+            password: passwordController.text.trim());
         //pop the loading circle
         Navigator.pop(context);
+        //add user detail to Firestore
+        addUserDetails(nameController.text, emailController.text);
       } else {
         //pop the loading circle
         Navigator.pop(context);
@@ -49,7 +55,7 @@ class _RegisterPageState extends State<RegisterPage> {
     } on FirebaseAuthException catch (e) {
       //pop the loading circle
       Navigator.pop(context);
-      // WRONG EMAIL
+      // WRONG EMAIL0
       if (e.code == 'email-already-in-use') {
         showErrorMessage("Email đã được sử dụng!");
       }
@@ -57,6 +63,16 @@ class _RegisterPageState extends State<RegisterPage> {
         showErrorMessage("Mật khẩu quá yếu!");
       }
     }
+  }
+
+  Future addUserDetails(String name, String email) async {
+    final User? user = auth.currentUser;
+    final uid = user?.uid;
+    await FirebaseFirestore.instance.collection('users').add({
+      'Name': name,
+      'Email': email,
+      'UserID': uid,
+    });
   }
 
   void showErrorMessage(String text) {

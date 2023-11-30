@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 
 class MessagesScreen extends StatefulWidget {
+  final ScrollController scrollController;
   final List messages;
-  const MessagesScreen({super.key, required this.messages});
+  const MessagesScreen(
+      {super.key, required this.messages, required this.scrollController});
 
   @override
   State<MessagesScreen> createState() => _MessagesScreenState();
 }
 
 class _MessagesScreenState extends State<MessagesScreen> {
-  ScrollController _scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
     var w = MediaQuery.of(context).size.width;
     return ListView.separated(
-      controller: _scrollController,
+      controller: widget.scrollController,
       itemBuilder: (context, index) {
         return Container(
           margin: EdgeInsets.all(10),

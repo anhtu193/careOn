@@ -13,12 +13,13 @@ class ChatBotPage extends StatefulWidget {
 class _ChatBotPageState extends State<ChatBotPage> {
   late DialogFlowtter dialogFlowtter;
   final TextEditingController _controller = TextEditingController();
-
+  late ScrollController _scrollController;
   List<Map<String, dynamic>> messages = [];
 
   @override
   void initState() {
     DialogFlowtter.fromFile().then((instance) => dialogFlowtter = instance);
+    _scrollController = ScrollController();
     super.initState();
   }
 
@@ -35,6 +36,13 @@ class _ChatBotPageState extends State<ChatBotPage> {
       if (response.message == null) return;
       setState(() {
         addMessage(response.message!);
+      });
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
       });
     }
   }
@@ -82,10 +90,14 @@ class _ChatBotPageState extends State<ChatBotPage> {
         ),
         body: Container(
           child: Column(children: [
-            Expanded(child: MessagesScreen(messages: messages)),
+            Expanded(
+                child: MessagesScreen(
+              messages: messages,
+              scrollController: _scrollController,
+            )),
             Container(
               child: Padding(
-                padding: const EdgeInsets.only(bottom: 20),
+                padding: const EdgeInsets.only(bottom: 10),
                 child: Row(children: [
                   Expanded(
                       child: Padding(

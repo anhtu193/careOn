@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "careonhealthcarebot-ytvp",
+  "private_key_id": "ceeedd29d5b449f86bd6610f8f3c653c3b292612",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCdKsdUNKMvgccG\nx+V/7VhnLDVaZjwGYjtQxwh1JBC6vJDhS9RkkKl7hVwN/5PhY1GOlgM4UvzQ7BMc\nFsb8ZsRV/BT8EaAUzog9W4UyTZYlUUcA77hvN4skfx4hp9hVAjYNTp8dQK0liUiU\nhN2StFmHzRP1SIyRIkcH8PI5GmEfjaXaW43epuDRqpsh82dyrLx08p2rXvzdFqV9\npMly6c7yfXmNwcpHcHCRqdA15OBMle5hY9Qw8xXiOGpe/D7KijqU3zJN61npsGE4\ncE17g76XIHdqqqD/8WVPgQAZxZ4eKiOyz329mWJmtjt/L+yWGlcoCIYth7Kx4swP\nIleV2mq1AgMBAAECggEACbV5T83aoNYrBdO2bTMryV/VQerb3WcXE/PfpWDfebGp\nX4mQKtA28A76c1DtATjh8mV4+HND8+IJgiw0CaaNjWQ/pZyvH2nsx6GONl/NnSuK\nr9efNJuhSFVj9p9IQWQcE7FeKe/zYkS7S5VznJrwhu+XwojDSjnsWmS7ieSDyG+e\nXUYYEXX02frT4TPgunmKgH4N6pOcla7dCIJ7ZsWksmYFRWKcDIy0g+jlLDEYUKjD\nJr4pYjblC5bvV4kBj1DSZzdwwTswgyecd7K5qiiv+WG2vAqX/T9ZMxFn6Kb9L+HR\nOM4oqSIwxUdAGx/S39LO3t9wTAdWRsJOyPTO87wgpwKBgQDKB0508vjYLiRhIDXW\nloaLkwqq9pDFSV6qZsL6IseTcza7F4Zf0YUut6CT7xN8DjUqPlykxmPcked0esAb\n7JiCd2sGkC4f47W3ALx/3tLqszgDPEEnsL6An0/+QLx5RClL1ghqNABIS2ruOtnR\n2xkmEf/ToH5VRMaws3AM9QxlAwKBgQDHJ2gx5PGkWtOJxhBHhMZ9I8KNJTNxgv8q\n9wsLJbOLY8moZj3awL1Qa3JbCLzPB1QZkI9Zod757GCVXiiHIncIYyWS3SNVQVDY\nGvt0hhAEWq4M79JoV128uuce3kJJD4/Gh1tkZPa5lTz8nuwoOLNvI1tNEETRCs7t\nh2qXO4gX5wKBgBj5ADy6kAIA6iRLW/xTjPwRx/7MDaclY5tCqpVK2Uqjsj88MDMF\n7iWRMzs2ET2DcBTxsnf3wf5Q1sByL+8DtvJhmowsJFdyyVJ+t85Cl+XFE4Zq207x\nrQqvJq8yB1oiD8y8/ztJhENrdyNNiQFEyP4IuYvKSfN2Ve0fsRkY7VhLAoGAN92G\nDPj8D+6qiGtXBbjpNRFi8dUNqTnl+ldycZ4Rz3geiW6ky0hl0rlRStgYnrqfjMxQ\nagROWC1Gqp/PHpk8as3lLF18G95Gn1hyUS2KMK5/RIHBtCNN2DNVwgL29Se4XSh7\nKp5n14dVpEewV1gQfYydf/CgXUN66IakD+hTNOECgYEAwcK/9twfha7xZhqo3BlY\nYHMHyilE1zH8cVGxTEUIzRuduENYI+pDx79z2zqbEgOUfCBVMouZ9W5MF/CytCjX\nnYSMj0Ds+Z3tiOeryZJ0NlX5nudCrm8Yu6WDUNrf6ZboyvD+FSm7lsPSHxDo+bo9\niARzs9tCnNdcNovfdJmYW8w=\n-----END PRIVATE KEY-----\n",
+  "client_email": "careonhealthcarebot@careonhealthcarebot-ytvp.iam.gserviceaccount.com",
+  "client_id": "105933489485924604248",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/careonhealthcarebot%40careonhealthcarebot-ytvp.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

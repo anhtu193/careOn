@@ -13,30 +13,24 @@ class MyTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40.0),
-      child: TextField(
-        style: TextStyle(
-            fontSize: 13,
-            fontFamily: 'Montserrat',
-            fontWeight: FontWeight.w700),
-        controller: controller,
-        obscureText: obscureText,
-        decoration: InputDecoration(
-            hintText: hintText,
-            hintStyle: TextStyle(
-                color: Colors.grey[500],
-                fontSize: 13,
-                fontFamily: 'Montserrat',
-                fontWeight: FontWeight.w700),
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
-            enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Color(0xffcdcdcd)),
-                borderRadius: BorderRadius.circular(15)),
-            filled: true,
-            contentPadding: EdgeInsets.all(16)),
-      ),
+    return TextField(
+      style: TextStyle(
+          fontSize: 13, fontFamily: 'Montserrat', fontWeight: FontWeight.w700),
+      controller: controller,
+      obscureText: obscureText,
+      decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: TextStyle(
+              color: Colors.grey[500],
+              fontSize: 13,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w700),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
+          enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Color(0xffcdcdcd)),
+              borderRadius: BorderRadius.circular(15)),
+          filled: true,
+          contentPadding: EdgeInsets.all(16)),
     );
   }
 }

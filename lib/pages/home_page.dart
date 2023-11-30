@@ -1,5 +1,4 @@
 import 'package:care_on/pages/chat_bot_page.dart';
-import 'package:care_on/pages/gpt_chat_bot_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -30,7 +29,7 @@ class HomePage extends StatelessWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const ChatGPTPage(),
+                        builder: (context) => const ChatBotPage(),
                       ));
                 },
               ),

@@ -38,6 +38,8 @@ dependencies:
     firebase_auth: ^4.14.1
     cloud_firestore: ^4.13.2
     dialog_flowtter:
+    chat_gpt_sdk: ^2.2.5
+    dash_chat_2: ^0.0.18
 
 dev_dependencies:
     flutter_test:

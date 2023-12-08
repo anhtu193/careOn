@@ -75,18 +75,24 @@ class _LoginPageState extends State<LoginPage> {
                 child: Image.asset('lib/images/logo.png'),
               ),
               //email
-              MyTextField(
-                controller: emailController,
-                hintText: 'Email',
-                obscureText: false,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: MyTextField(
+                  controller: emailController,
+                  hintText: 'Email',
+                  obscureText: false,
+                ),
               ),
               const SizedBox(
                 height: 36,
               ),
-              MyTextField(
-                controller: passwordController,
-                hintText: 'Mật khẩu',
-                obscureText: true,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: MyTextField(
+                  controller: passwordController,
+                  hintText: 'Mật khẩu',
+                  obscureText: true,
+                ),
               ),
               Padding(
                 padding:

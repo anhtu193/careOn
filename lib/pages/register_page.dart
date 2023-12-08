@@ -116,34 +116,46 @@ class _RegisterPageState extends State<RegisterPage> {
                 height: 43,
               ),
               //email
-              MyTextField(
-                controller: nameController,
-                hintText: 'Họ tên',
-                obscureText: false,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                child: MyTextField(
+                  controller: nameController,
+                  hintText: 'Họ tên',
+                  obscureText: false,
+                ),
               ),
               const SizedBox(
                 height: 32,
               ),
-              MyTextField(
-                controller: emailController,
-                hintText: 'Email',
-                obscureText: false,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                child: MyTextField(
+                  controller: emailController,
+                  hintText: 'Email',
+                  obscureText: false,
+                ),
               ),
               const SizedBox(
                 height: 32,
               ),
-              MyTextField(
-                controller: passwordController,
-                hintText: 'Mật khẩu',
-                obscureText: true,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                child: MyTextField(
+                  controller: passwordController,
+                  hintText: 'Mật khẩu',
+                  obscureText: true,
+                ),
               ),
               const SizedBox(
                 height: 32,
               ),
-              MyTextField(
-                controller: repeatPasswordController,
-                hintText: 'Nhập lại mật khẩu',
-                obscureText: true,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                child: MyTextField(
+                  controller: repeatPasswordController,
+                  hintText: 'Nhập lại mật khẩu',
+                  obscureText: true,
+                ),
               ),
 
               const SizedBox(

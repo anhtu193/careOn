@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "353876363828",
+    "project_id": "careon-73a33",
+    "storage_bucket": "careon-73a33.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:353876363828:android:6eb2f5976071b18af49861",
+        "android_client_info": {
+          "package_name": "com.example.care_on"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGDoQnapV-otYkh7CnVckWVfhX9dIy1iU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

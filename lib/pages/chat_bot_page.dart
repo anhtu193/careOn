@@ -1,7 +1,12 @@
+import 'dart:convert';
+
 import 'package:care_on/components/messages_screen.dart';
 import 'package:care_on/components/textfield.dart';
+import 'package:care_on/pages/home_page.dart';
+import 'package:care_on/pages/navigator.dart';
 import 'package:dialog_flowtter/dialog_flowtter.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatBotPage extends StatefulWidget {
   const ChatBotPage({super.key});
@@ -10,7 +15,11 @@ class ChatBotPage extends StatefulWidget {
   State<ChatBotPage> createState() => _ChatBotPageState();
 }
 
-class _ChatBotPageState extends State<ChatBotPage> {
+class _ChatBotPageState extends State<ChatBotPage>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+  late SharedPreferences _prefs;
   late DialogFlowtter dialogFlowtter;
   final TextEditingController _controller = TextEditingController();
   late ScrollController _scrollController;
@@ -20,7 +29,31 @@ class _ChatBotPageState extends State<ChatBotPage> {
   void initState() {
     DialogFlowtter.fromFile().then((instance) => dialogFlowtter = instance);
     _scrollController = ScrollController();
+    SharedPreferences.getInstance().then((prefs) {
+      _prefs = prefs;
+      // Khôi phục tin nhắn khi mở lại ứng dụng
+      restoreMessages();
+    });
     super.initState();
+  }
+
+  void restoreMessages() {
+    final List<String>? encodedMessages = _prefs.getStringList('savedMessages');
+    if (encodedMessages != null) {
+      setState(() {
+        messages = encodedMessages
+            .map((encodedMessage) => Map<String, dynamic>.from(
+                json.decode(encodedMessage))) // Phục hồi tin nhắn từ chuỗi
+            .toList();
+      });
+    }
+  }
+
+  void saveMessages() {
+    final List<String> encodedMessages = messages
+        .map((message) => message.toString()) // Chuyển đổi tin nhắn thành chuỗi
+        .toList();
+    _prefs.setStringList('savedMessages', encodedMessages);
   }
 
   sendMessage(String text) async {
@@ -49,23 +82,17 @@ class _ChatBotPageState extends State<ChatBotPage> {
 
   addMessage(Message message, [bool isUserMessage = false]) {
     messages.add({'message': message, 'isUserMessage': isUserMessage});
+    saveMessages();
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Color(0xffF4F6FB),
         appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.black),
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
-              size: 20,
-            ),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
           elevation: 0,
           title: Column(
             children: [

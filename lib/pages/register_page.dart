@@ -72,6 +72,8 @@ class _RegisterPageState extends State<RegisterPage> {
       'Name': name,
       'Email': email,
       'UserID': uid,
+      'height': "__",
+      'weight': "__",
     });
   }
 

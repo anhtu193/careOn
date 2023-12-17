@@ -130,6 +130,7 @@ class _ChatBotPageState extends State<ChatBotPage>
                       child: Padding(
                     padding: const EdgeInsets.only(left: 15),
                     child: MyTextField(
+                        inputType: TextInputType.text,
                         controller: _controller,
                         hintText: "Nhập tin nhắn của bạn",
                         obscureText: false),

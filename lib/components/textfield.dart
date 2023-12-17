@@ -4,12 +4,14 @@ class MyTextField extends StatelessWidget {
   final controller;
   final String hintText;
   final bool obscureText;
+  final TextInputType inputType;
 
   const MyTextField(
       {super.key,
       required this.controller,
       required this.hintText,
-      required this.obscureText});
+      required this.obscureText,
+      required this.inputType});
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +20,7 @@ class MyTextField extends StatelessWidget {
           fontSize: 13, fontFamily: 'Montserrat', fontWeight: FontWeight.w700),
       controller: controller,
       obscureText: obscureText,
+      keyboardType: inputType,
       decoration: InputDecoration(
           hintText: hintText,
           hintStyle: TextStyle(

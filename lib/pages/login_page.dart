@@ -78,6 +78,7 @@ class _LoginPageState extends State<LoginPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40),
                 child: MyTextField(
+                  inputType: TextInputType.text,
                   controller: emailController,
                   hintText: 'Email',
                   obscureText: false,
@@ -89,6 +90,7 @@ class _LoginPageState extends State<LoginPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40),
                 child: MyTextField(
+                  inputType: TextInputType.text,
                   controller: passwordController,
                   hintText: 'Mật khẩu',
                   obscureText: true,

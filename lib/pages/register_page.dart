@@ -121,6 +121,7 @@ class _RegisterPageState extends State<RegisterPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40.0),
                 child: MyTextField(
+                  inputType: TextInputType.text,
                   controller: nameController,
                   hintText: 'Họ tên',
                   obscureText: false,
@@ -132,6 +133,7 @@ class _RegisterPageState extends State<RegisterPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40.0),
                 child: MyTextField(
+                  inputType: TextInputType.text,
                   controller: emailController,
                   hintText: 'Email',
                   obscureText: false,
@@ -143,6 +145,7 @@ class _RegisterPageState extends State<RegisterPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40.0),
                 child: MyTextField(
+                  inputType: TextInputType.text,
                   controller: passwordController,
                   hintText: 'Mật khẩu',
                   obscureText: true,
@@ -154,6 +157,7 @@ class _RegisterPageState extends State<RegisterPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40.0),
                 child: MyTextField(
+                  inputType: TextInputType.text,
                   controller: repeatPasswordController,
                   hintText: 'Nhập lại mật khẩu',
                   obscureText: true,

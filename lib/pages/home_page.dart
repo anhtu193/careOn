@@ -124,7 +124,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   double calculateBMI(String height, String weight) {
-    if (height != "__" && weight != "__") {
+    if (height != "__" && weight != "__" && height != "0" && weight != "0") {
       double dHeight = double.parse(height);
       double dWeight = double.parse(weight);
       dHeight = dHeight / 100;

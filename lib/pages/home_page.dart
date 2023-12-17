@@ -397,6 +397,7 @@ class _HomePageState extends State<HomePage> {
                     child: bmi == 0
                         ? Text(
                             "Hãy cho biết cả chiều cao và cân nặng của bạn ở phần Hồ sơ để biết được tình trạng cơ thể của mình nhé!",
+                            textAlign: TextAlign.justify,
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w500),
                           )

@@ -1,0 +1,250 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+
+class DiseaseInfoPage extends StatefulWidget {
+  String diseaseName;
+  DiseaseInfoPage({super.key, required this.diseaseName});
+
+  @override
+  State<DiseaseInfoPage> createState() => _DiseaseInfoPageState();
+}
+
+class _DiseaseInfoPageState extends State<DiseaseInfoPage> {
+  late Future<DocumentSnapshot<Map<String, dynamic>>> diseaseInfo;
+
+  @override
+  void initState() {
+    super.initState();
+    diseaseInfo = fetchDiseaseInfo();
+  }
+
+  Future<DocumentSnapshot<Map<String, dynamic>>> fetchDiseaseInfo() async {
+    try {
+      QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await FirebaseFirestore.instance
+              .collection('diseases')
+              .where('diseaseName', isEqualTo: widget.diseaseName)
+              .limit(1)
+              .get();
+
+      if (querySnapshot.size > 0) {
+        return querySnapshot.docs.first;
+      } else {
+        throw 'No matching document found';
+      }
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  String processTextWithLineBreaks(String inputText) {
+    List<String> lines = inputText.split('-');
+    String processedText = lines.join('\n•');
+    return processedText;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+        child: Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        iconTheme:
+            IconThemeData(color: Colors.black, size: 28 //change your color here
+                ),
+        backgroundColor: Color(0xffF4F6FB),
+        elevation: 0,
+        title: Text(
+          widget.diseaseName,
+          style: TextStyle(
+              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+        ),
+      ),
+      body: FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+        future: diseaseInfo,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data == null) {
+            return Center(child: Text('No data available'));
+          } else {
+            // Lấy thông tin từ snapshot và hiển thị lên các Text
+            var diseaseData = snapshot.data!.data() as Map<String, dynamic>?;
+            if (diseaseData != null) {
+              String cause = diseaseData['cause'];
+              String diagnosis = diseaseData['diagnosis'];
+              String overview = diseaseData['overview'];
+              String prevention = diseaseData['prevention'];
+              String symptom = diseaseData['symptom'];
+              String treatment = diseaseData['treatment'];
+              String vulnerable = diseaseData['vulnerable'];
+
+              return SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: 30.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Tổng quan:',
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 6,
+                    ),
+                    Text(
+                      processTextWithLineBreaks(overview),
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          height: 1.4),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Nguyên nhân gây ra bệnh ' + widget.diseaseName,
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 6,
+                    ),
+                    Text(
+                      processTextWithLineBreaks(cause),
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          height: 1.4),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Triệu chứng bệnh ' + widget.diseaseName,
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 6,
+                    ),
+                    Text(
+                      processTextWithLineBreaks(symptom),
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          height: 1.4),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Đối tượng nguy cơ bệnh ' + widget.diseaseName,
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 6,
+                    ),
+                    Text(
+                      processTextWithLineBreaks(vulnerable),
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          height: 1.4),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Phòng ngừa bệnh ' + widget.diseaseName,
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 6,
+                    ),
+                    Text(
+                      processTextWithLineBreaks(prevention),
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          height: 1.4),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Các biện pháp chẩn đoán bệnh ' + widget.diseaseName,
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 6,
+                    ),
+                    Text(
+                      processTextWithLineBreaks(diagnosis),
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          height: 1.4),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Các biện pháp điều trị bệnh ' + widget.diseaseName,
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 6,
+                    ),
+                    Text(
+                      processTextWithLineBreaks(treatment),
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          height: 1.4),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                  ],
+                ),
+              );
+            } else {
+              return Center(child: Text('No data available'));
+            }
+
+            // return SingleChildScrollView(
+            //   padding: EdgeInsets.all(16.0),
+            //   child: Column(
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     children: [
+            //       Text('Cause: ${diseaseData['cause']}'),
+            //       Text('Diagnosis: ${diseaseData['diagnosis']}'),
+            //       Text('Overview: ${diseaseData['overview']}'),
+            //       Text('Prevention: ${diseaseData['prevention']}'),
+            //       Text('Symptom: ${diseaseData['symptom']}'),
+            //       Text('Treatment: ${diseaseData['treatment']}'),
+            //       Text('Vulnerable: ${diseaseData['vulnerable']}'),
+            //       // Hiển thị các thông tin khác của bệnh ở đây
+            //     ],
+            //   ),
+            // );
+          }
+        },
+      ),
+    ));
+  }
+}

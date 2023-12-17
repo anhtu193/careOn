@@ -82,6 +82,8 @@ class _EditUserPageState extends State<EditUserPage> {
       } else {
         print('No user data found for the current user.');
       }
+      // Quay về màn hình trước đó
+      Navigator.pop(context, true);
     }
   }
 
@@ -118,9 +120,6 @@ class _EditUserPageState extends State<EditUserPage> {
                     duration: Duration(seconds: 2),
                   ),
                 );
-
-                // Quay về màn hình trước đó
-                Navigator.of(context).pop();
               },
               icon: Icon(
                 Icons.check,

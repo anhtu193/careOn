@@ -1,3 +1,4 @@
+import 'package:care_on/models/disease_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -81,6 +82,15 @@ class _DiseaseInfoPageState extends State<DiseaseInfoPage> {
               String treatment = diseaseData['treatment'];
               String vulnerable = diseaseData['vulnerable'];
 
+              Disease disease = Disease(
+                  diseaseName: widget.diseaseName,
+                  cause: cause,
+                  diagnosis: diagnosis,
+                  overview: overview,
+                  prevention: prevention,
+                  symptom: symptom,
+                  treatment: treatment,
+                  vulnerable: vulnerable);
               return SingleChildScrollView(
                 padding: EdgeInsets.symmetric(horizontal: 30.0),
                 child: Column(
@@ -106,7 +116,7 @@ class _DiseaseInfoPageState extends State<DiseaseInfoPage> {
                       height: 10,
                     ),
                     Text(
-                      'Nguyên nhân gây ra bệnh ' + widget.diseaseName,
+                      'Nguyên nhân gây ra bệnh ' + disease.diseaseName,
                       style:
                           TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                     ),
@@ -125,7 +135,7 @@ class _DiseaseInfoPageState extends State<DiseaseInfoPage> {
                       height: 10,
                     ),
                     Text(
-                      'Triệu chứng bệnh ' + widget.diseaseName,
+                      'Triệu chứng bệnh ' + disease.diseaseName,
                       style:
                           TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                     ),
@@ -133,7 +143,7 @@ class _DiseaseInfoPageState extends State<DiseaseInfoPage> {
                       height: 6,
                     ),
                     Text(
-                      processTextWithLineBreaks(symptom),
+                      processTextWithLineBreaks(disease.symptom),
                       textAlign: TextAlign.justify,
                       style: TextStyle(
                           fontSize: 14,
@@ -144,7 +154,7 @@ class _DiseaseInfoPageState extends State<DiseaseInfoPage> {
                       height: 10,
                     ),
                     Text(
-                      'Đối tượng nguy cơ bệnh ' + widget.diseaseName,
+                      'Đối tượng nguy cơ bệnh ' + disease.diseaseName,
                       style:
                           TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                     ),
@@ -152,7 +162,7 @@ class _DiseaseInfoPageState extends State<DiseaseInfoPage> {
                       height: 6,
                     ),
                     Text(
-                      processTextWithLineBreaks(vulnerable),
+                      processTextWithLineBreaks(disease.vulnerable),
                       textAlign: TextAlign.justify,
                       style: TextStyle(
                           fontSize: 14,
@@ -163,7 +173,7 @@ class _DiseaseInfoPageState extends State<DiseaseInfoPage> {
                       height: 10,
                     ),
                     Text(
-                      'Phòng ngừa bệnh ' + widget.diseaseName,
+                      'Phòng ngừa bệnh ' + disease.diseaseName,
                       style:
                           TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                     ),
@@ -171,7 +181,7 @@ class _DiseaseInfoPageState extends State<DiseaseInfoPage> {
                       height: 6,
                     ),
                     Text(
-                      processTextWithLineBreaks(prevention),
+                      processTextWithLineBreaks(disease.prevention),
                       textAlign: TextAlign.justify,
                       style: TextStyle(
                           fontSize: 14,
@@ -182,7 +192,7 @@ class _DiseaseInfoPageState extends State<DiseaseInfoPage> {
                       height: 10,
                     ),
                     Text(
-                      'Các biện pháp chẩn đoán bệnh ' + widget.diseaseName,
+                      'Các biện pháp chẩn đoán bệnh ' + disease.diseaseName,
                       style:
                           TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                     ),
@@ -190,7 +200,7 @@ class _DiseaseInfoPageState extends State<DiseaseInfoPage> {
                       height: 6,
                     ),
                     Text(
-                      processTextWithLineBreaks(diagnosis),
+                      processTextWithLineBreaks(disease.diagnosis),
                       textAlign: TextAlign.justify,
                       style: TextStyle(
                           fontSize: 14,
@@ -201,7 +211,7 @@ class _DiseaseInfoPageState extends State<DiseaseInfoPage> {
                       height: 10,
                     ),
                     Text(
-                      'Các biện pháp điều trị bệnh ' + widget.diseaseName,
+                      'Các biện pháp điều trị bệnh ' + disease.diseaseName,
                       style:
                           TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                     ),
@@ -209,7 +219,7 @@ class _DiseaseInfoPageState extends State<DiseaseInfoPage> {
                       height: 6,
                     ),
                     Text(
-                      processTextWithLineBreaks(treatment),
+                      processTextWithLineBreaks(disease.treatment),
                       textAlign: TextAlign.justify,
                       style: TextStyle(
                           fontSize: 14,
@@ -225,23 +235,6 @@ class _DiseaseInfoPageState extends State<DiseaseInfoPage> {
             } else {
               return Center(child: Text('No data available'));
             }
-
-            // return SingleChildScrollView(
-            //   padding: EdgeInsets.all(16.0),
-            //   child: Column(
-            //     crossAxisAlignment: CrossAxisAlignment.start,
-            //     children: [
-            //       Text('Cause: ${diseaseData['cause']}'),
-            //       Text('Diagnosis: ${diseaseData['diagnosis']}'),
-            //       Text('Overview: ${diseaseData['overview']}'),
-            //       Text('Prevention: ${diseaseData['prevention']}'),
-            //       Text('Symptom: ${diseaseData['symptom']}'),
-            //       Text('Treatment: ${diseaseData['treatment']}'),
-            //       Text('Vulnerable: ${diseaseData['vulnerable']}'),
-            //       // Hiển thị các thông tin khác của bệnh ở đây
-            //     ],
-            //   ),
-            // );
           }
         },
       ),

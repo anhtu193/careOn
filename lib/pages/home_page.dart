@@ -1,4 +1,6 @@
 import 'package:care_on/components/custom_button.dart';
+import 'package:care_on/pages/add_note_page.dart';
+import 'package:care_on/pages/note_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:care_on/pages/chat_bot_page.dart';
@@ -235,14 +237,27 @@ class _HomePageState extends State<HomePage> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  CustomButton(
-                    imagePath: "lib/images/reminder.png",
-                    buttonFunctionName: "Nhắc nhở",
+                  GestureDetector(
+                    onTap: () {},
+                    child: CustomButton(
+                      imagePath: "lib/images/reminder.png",
+                      buttonFunctionName: "Nhắc nhở",
+                    ),
                   ),
                   Spacer(),
-                  CustomButton(
-                      imagePath: "lib/images/note.png",
-                      buttonFunctionName: "Ghi chú"),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NotePage(),
+                        ),
+                      );
+                    },
+                    child: CustomButton(
+                        imagePath: "lib/images/note.png",
+                        buttonFunctionName: "Ghi chú"),
+                  ),
                   Spacer(),
                   CustomButton(
                       imagePath: "lib/images/hospital.png",

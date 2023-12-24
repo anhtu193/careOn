@@ -1,6 +1,9 @@
+import 'package:care_on/components/reminder_tile.dart';
 import 'package:care_on/models/reminder_model.dart';
 import 'package:care_on/pages/add_reminder_page.dart';
 import 'package:care_on/pages/navigator.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ReminderPage extends StatefulWidget {
@@ -12,6 +15,40 @@ class ReminderPage extends StatefulWidget {
 
 class _ReminderPageState extends State<ReminderPage> {
   List<Reminder> reminderList = [];
+
+  void getRemindersFromFirestore() async {
+    String userId = FirebaseAuth.instance.currentUser!.uid;
+
+    FirebaseFirestore.instance
+        .collection('reminders')
+        .where('userId', isEqualTo: userId)
+        .snapshots()
+        .listen((QuerySnapshot snapshot) {
+      setState(() {
+        reminderList.clear();
+        reminderList = snapshot.docs.map((DocumentSnapshot document) {
+          return Reminder(
+            userId: document['userId'],
+            reminderId: document['reminderId'],
+            description: document['description'],
+            needAlarm: document['needAlarm'],
+            onRepeat: document['onRepeat'],
+            reminderOn: document['reminderOn'],
+            timeStart: document['timeStart'],
+            title: document['title'],
+          );
+        }).toList();
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getRemindersFromFirestore();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -54,6 +91,29 @@ class _ReminderPageState extends State<ReminderPage> {
           ),
         ),
       ),
+      body: reminderList.isEmpty
+          ? Center(
+              child: Container(
+                width: 300,
+                child: Text(
+                  "Hãy thêm nhắc nhở để theo dõi các hoạt động của bạn nhé!",
+                  textAlign: TextAlign.center,
+                  maxLines: null,
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            )
+          : ListView.builder(
+              itemCount: reminderList.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: ReminderTile(
+                    reminder: reminderList[index],
+                  ),
+                );
+              },
+            ),
     ));
   }
 }

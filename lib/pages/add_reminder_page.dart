@@ -2,6 +2,7 @@ import 'package:care_on/components/bottom_sheet_data.dart';
 import 'package:care_on/components/description_data.dart';
 import 'package:care_on/components/textfield.dart';
 import 'package:care_on/models/reminder_model.dart';
+import 'package:care_on/pages/reminder_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -47,6 +48,7 @@ class _AddReminderPageState extends State<AddReminderPage> {
     "Th 7",
     "CN"
   ];
+
   List<bool> selectedDays = List.filled(7, false);
 
   void _showBottomSheet(BuildContext context) {
@@ -261,9 +263,20 @@ class _AddReminderPageState extends State<AddReminderPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    selectedTime = TimeOfDay.now();
-    time =
-        "${selectedTime.hour.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')}";
+    if (widget.existedReminder == null) {
+      selectedTime = TimeOfDay.now();
+      time =
+          "${selectedTime.hour.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')}";
+    } else {
+      titleController.text = widget.existedReminder!.title;
+      description = widget.existedReminder!.description;
+      time = widget.existedReminder!.timeStart;
+      textSelectedDays = widget.existedReminder!.reminderOn;
+      repeatSwitched = widget.existedReminder!.onRepeat;
+      onRepeat = widget.existedReminder!.onRepeat;
+      needAlarm = widget.existedReminder!.needAlarm;
+      isSwitched = widget.existedReminder!.needAlarm;
+    }
   }
 
   void updateReminderToFirestore() {
@@ -282,16 +295,16 @@ class _AddReminderPageState extends State<AddReminderPage> {
       );
     } else {
       if (textSelectedDays == "Chọn ngày") {
-        SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
-            'Vui lòng chọn ngày hoạt động!',
+            'Vui lòng chọn ngày cho hoạt động!',
             style: TextStyle(
                 fontFamily: 'Montserrat',
                 fontWeight: FontWeight.w500,
                 fontSize: 16),
           ),
           duration: Duration(seconds: 2), // Thời gian hiển thị SnackBar
-        );
+        ));
       } else {
         String userId = FirebaseAuth.instance.currentUser!.uid;
         String? reminderId;
@@ -317,6 +330,7 @@ class _AddReminderPageState extends State<AddReminderPage> {
             .set(newReminder.toMap())
             .then((value) {
           print("Nhắc nhở đã được cập nhật với ID: $reminderId");
+
           Navigator.pop(context);
         }).catchError((error) {
           print("Lỗi khi cập nhật nhắc nhở: $error");
@@ -324,6 +338,67 @@ class _AddReminderPageState extends State<AddReminderPage> {
         Navigator.pop(context);
       }
     }
+  }
+
+  void deleteReminderFromFirestore(String reminderId) {
+    FirebaseFirestore.instance
+        .collection('reminders')
+        .doc(reminderId)
+        .delete()
+        .then((value) {
+      print("Nhắc nhở đã được xóa với ID: $reminderId");
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          'Xóa nhắc nhở thành công!',
+          style: TextStyle(
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w500,
+              fontSize: 16),
+        ),
+        duration: Duration(seconds: 2), // Thời gian hiển thị SnackBar
+      ));
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ReminderPage(),
+        ),
+      );
+    }).catchError((error) {
+      print("Lỗi khi xóa ghi chú: $error");
+    });
+  }
+
+  void _confirmDeleteReminder(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "XÓA NHẮC NHỞ",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          content: Text("Bạn có chắc chắn xóa Nhắc nhở này không?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Hủy',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            ),
+            TextButton(
+              onPressed: () {
+                deleteReminderFromFirestore(widget.existedReminder!.reminderId);
+              },
+              child: Text(
+                'Xóa',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -352,7 +427,7 @@ class _AddReminderPageState extends State<AddReminderPage> {
               ? SizedBox()
               : IconButton(
                   onPressed: () {
-                    // _confirmDeleteBudget(context);
+                    _confirmDeleteReminder(context);
                   },
                   icon: Icon(Icons.delete)),
           IconButton(

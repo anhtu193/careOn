@@ -126,7 +126,7 @@ class _AddNotePageState extends State<AddNotePage> {
     });
   }
 
-  void _confirmDeleteBudget(BuildContext context) {
+  void _confirmDeleteNote(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -185,7 +185,7 @@ class _AddNotePageState extends State<AddNotePage> {
               ? SizedBox()
               : IconButton(
                   onPressed: () {
-                    _confirmDeleteBudget(context);
+                    _confirmDeleteNote(context);
                   },
                   icon: Icon(Icons.delete)),
           IconButton(

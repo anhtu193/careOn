@@ -17,7 +17,7 @@ class MyTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       style: TextStyle(
-          fontSize: 13, fontFamily: 'Montserrat', fontWeight: FontWeight.w700),
+          fontSize: 14, fontFamily: 'Montserrat', fontWeight: FontWeight.w700),
       controller: controller,
       obscureText: obscureText,
       keyboardType: inputType,

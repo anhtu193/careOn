@@ -1,6 +1,7 @@
 import 'package:care_on/components/custom_button.dart';
 import 'package:care_on/pages/add_note_page.dart';
 import 'package:care_on/pages/note_page.dart';
+import 'package:care_on/pages/reminder_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:care_on/pages/chat_bot_page.dart';
@@ -238,7 +239,13 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ReminderPage(),
+                          ));
+                    },
                     child: CustomButton(
                       imagePath: "lib/images/reminder.png",
                       buttonFunctionName: "Nhắc nhở",

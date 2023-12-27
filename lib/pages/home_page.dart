@@ -317,10 +317,6 @@ class _HomePageState extends State<HomePage> {
                           imagePath: "lib/images/note.png",
                           buttonFunctionName: "Ghi chú"),
                     ),
-                    Spacer(),
-                    CustomButton(
-                        imagePath: "lib/images/hospital.png",
-                        buttonFunctionName: "Bệnh viện")
                   ],
                 ),
               ),

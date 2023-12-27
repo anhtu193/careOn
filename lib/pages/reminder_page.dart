@@ -112,7 +112,8 @@ class _ReminderPageState extends State<ReminderPage> {
               itemCount: reminderList.length,
               itemBuilder: (context, index) {
                 return Padding(
-                  padding: const EdgeInsets.only(bottom: 20),
+                  padding:
+                      const EdgeInsets.only(bottom: 20, left: 28, right: 28),
                   child: ReminderTile(
                     reminder: reminderList[index],
                   ),

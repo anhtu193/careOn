@@ -97,7 +97,9 @@ class Noti {
         await localNotificationService.zonedSchedule(
           generateRandomIntId(),
           reminder.title,
-          reminder.description,
+          reminder.description == ""
+              ? "Đến giờ cho hoạt động " + reminder.title + " rồi!"
+              : reminder.description,
           scheduledTime,
           const NotificationDetails(
             android: AndroidNotificationDetails('channel_id', 'channel_name',

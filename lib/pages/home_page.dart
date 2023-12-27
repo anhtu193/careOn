@@ -524,6 +524,65 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12, right: 28),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Nhắc nhở',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ReminderPage(),
+                            ));
+                      },
+                      child: Text(
+                        'Xem tất cả',
+                        style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xff3AB5FF)),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              reminderList.isEmpty
+                  ? Center(
+                      child: Container(
+                        margin: EdgeInsets.only(top: 25),
+                        width: 300,
+                        child: Text(
+                          "Hãy thêm nhắc nhở để theo dõi các hoạt động của bạn nhé!",
+                          textAlign: TextAlign.center,
+                          maxLines: null,
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    )
+                  : Container(
+                      width: double.infinity,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount:
+                            reminderList.length < 2 ? reminderList.length : 2,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding:
+                                const EdgeInsets.only(bottom: 20, right: 28),
+                            child: ReminderTile(
+                              reminder: reminderList[index],
+                            ),
+                          );
+                        },
+                      ),
+                    )
             ],
           ),
         ),

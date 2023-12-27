@@ -28,7 +28,7 @@ class _ReminderTileState extends State<ReminderTile> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 28),
+              padding: const EdgeInsets.symmetric(horizontal: 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -90,7 +90,7 @@ class _ReminderTileState extends State<ReminderTile> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 28, top: 7),
+              padding: const EdgeInsets.only(top: 7),
               child: Row(
                 children: [
                   SizedBox(

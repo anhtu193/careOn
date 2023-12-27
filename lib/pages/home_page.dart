@@ -1,4 +1,7 @@
 import 'package:care_on/components/custom_button.dart';
+import 'package:care_on/components/reminder_tile.dart';
+import 'package:care_on/models/reminder_model.dart';
+import 'package:care_on/noti.dart';
 import 'package:care_on/pages/add_note_page.dart';
 import 'package:care_on/pages/note_page.dart';
 import 'package:care_on/pages/reminder_page.dart';
@@ -6,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:care_on/pages/chat_bot_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,6 +25,9 @@ class _HomePageState extends State<HomePage> {
   String bodyCondition = "";
   String adviceText = "";
   double bmi = 0;
+  List<Reminder> reminderList = [];
+  late final Noti service;
+  final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   void setCondition(double bmi) {
     if (bmi > 0 && bmi < 18.5) {
@@ -141,6 +148,44 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     getUserDataFromFirebase();
+    service = Noti(flutterLocalNotificationsPlugin);
+    service.initialize();
+    getRemindersFromFirestore();
+  }
+
+  void getRemindersFromFirestore() async {
+    String userId = FirebaseAuth.instance.currentUser!.uid;
+
+    FirebaseFirestore.instance
+        .collection('reminders')
+        .where('userId', isEqualTo: userId)
+        .snapshots()
+        .listen((QuerySnapshot snapshot) {
+      // Hủy tất cả các thông báo hiện tại
+      flutterLocalNotificationsPlugin.cancelAll();
+      print('Đang hủy các thông báo cũ và cập nhật các thông báo mới');
+
+      setState(() {
+        reminderList.clear();
+        reminderList = snapshot.docs.map((DocumentSnapshot document) {
+          return Reminder(
+            userId: document['userId'],
+            reminderId: document['reminderId'],
+            description: document['description'],
+            needAlarm: document['needAlarm'],
+            onRepeat: document['onRepeat'],
+            reminderOn: document['reminderOn'],
+            timeStart: document['timeStart'],
+            title: document['title'],
+          );
+        }).toList();
+      });
+
+      // Đặt lại thông báo cho từng Reminder trong danh sách mới
+      for (var reminder in reminderList) {
+        service.scheduleNotification(reminder);
+      }
+    });
   }
 
   Future<void> getUserDataFromFirebase() async {
@@ -155,11 +200,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  //sign user out
-  void signUserOut() {
-    FirebaseAuth.instance.signOut();
-  }
-
   Color bodyConditionColor(String bodyCondition) {
     if (bodyCondition == "Bình thường") return Color(0xff14ff00);
     if (bodyCondition == "Thiếu cân") return Color(0xff3AB5FF);
@@ -172,313 +212,320 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      body: Container(
-        padding: EdgeInsets.fromLTRB(31, 45, 0, 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              margin: EdgeInsets.fromLTRB(1, 0, 32, 24.5),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: EdgeInsets.fromLTRB(0, 0, 119, 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Center(
-                          child: Text(
-                            "👋 Xin chào",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w700),
+      body: Padding(
+        padding: EdgeInsets.only(left: 30, top: 25),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                margin: EdgeInsets.fromLTRB(1, 0, 32, 24.5),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.fromLTRB(0, 0, 119, 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Center(
+                            child: Text(
+                              "👋 Xin chào",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w700),
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 7,
-                        ),
-                        Center(
-                          child: FutureBuilder<String>(
-                            future: getUserNameFromFirebase(),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return CircularProgressIndicator();
-                              } else {
-                                if (snapshot.hasError) {
-                                  return Text('Error: ${snapshot.error}');
+                          SizedBox(
+                            height: 7,
+                          ),
+                          Center(
+                            child: FutureBuilder<String>(
+                              future: getUserNameFromFirebase(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return CircularProgressIndicator();
                                 } else {
-                                  return Text(
-                                    snapshot.data ?? "Unknown user!",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  );
+                                  if (snapshot.hasError) {
+                                    return Text('Error: ${snapshot.error}');
+                                  } else {
+                                    return Text(
+                                      snapshot.data ?? "Unknown user!",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    );
+                                  }
                                 }
-                              }
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Spacer(),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(0, 4, 0, 0),
-                    height: 31,
-                    width: 31,
-                    child: Image.asset('lib/images/bell.png'),
-                  )
-                ],
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.fromLTRB(0, 0, 30, 29.5),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ReminderPage(),
-                          ));
-                    },
-                    child: CustomButton(
-                      imagePath: "lib/images/reminder.png",
-                      buttonFunctionName: "Nhắc nhở",
-                    ),
-                  ),
-                  Spacer(),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => NotePage(),
-                        ),
-                      );
-                    },
-                    child: CustomButton(
-                        imagePath: "lib/images/note.png",
-                        buttonFunctionName: "Ghi chú"),
-                  ),
-                  Spacer(),
-                  CustomButton(
-                      imagePath: "lib/images/hospital.png",
-                      buttonFunctionName: "Bệnh viện")
-                ],
-              ),
-            ),
-            Container(
-              margin: bmi == 0
-                  ? EdgeInsets.fromLTRB(0, 0, 33, 0)
-                  : EdgeInsets.fromLTRB(0, 0, 33, 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: EdgeInsets.fromLTRB(0, 0, 0, 14),
-                    child: Text(
-                      'Tình trạng của tôi',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-                    ),
-                  ),
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // chieu cao
-                              Container(
-                                margin: EdgeInsets.fromLTRB(0, 0, 0, 11),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      child: Text(
-                                        'Chiều cao:',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.fromLTRB(22, 0, 0, 0),
-                                      child: FutureBuilder<String>(
-                                        future: getUserHeightFromFirebase(),
-                                        builder: (context, snapshot) {
-                                          if (snapshot.connectionState ==
-                                              ConnectionState.waiting) {
-                                            return CircularProgressIndicator();
-                                          } else {
-                                            if (snapshot.hasError) {
-                                              return Text(
-                                                  'Error: ${snapshot.error}');
-                                            } else {
-                                              return Text(
-                                                userHeight + " cm",
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              );
-                                            }
-                                          }
-                                        },
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              // can nang
-                              Container(
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      child: Text("Cân nặng:",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500)),
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.fromLTRB(23, 0, 0, 0),
-                                      child: FutureBuilder<String>(
-                                        future: getUserWeightFromFirebase(),
-                                        builder: (context, snapshot) {
-                                          if (snapshot.connectionState ==
-                                              ConnectionState.waiting) {
-                                            return CircularProgressIndicator();
-                                          } else {
-                                            if (snapshot.hasError) {
-                                              return Text(
-                                                  'Error: ${snapshot.error}');
-                                            } else {
-                                              return Text(
-                                                userWeight + " kg",
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              );
-                                            }
-                                          }
-                                        },
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Center(
-                                child: Container(
-                                  margin: EdgeInsets.fromLTRB(0, 0, 0, 3.5),
-                                  child: Text(
-                                    "BMI",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w400),
-                                  ),
-                                ),
-                              ),
-                              Center(
-                                child: Text(
-                                  bmi.toStringAsFixed(1).toString(),
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 32,
-                                    fontWeight: FontWeight.w700,
-                                    color: Color(0xff3ab5ff),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    child: bmi == 0
-                        ? Text(
-                            "Hãy cho biết cả chiều cao và cân nặng của bạn ở phần Hồ sơ để biết được tình trạng cơ thể của mình nhé!",
-                            textAlign: TextAlign.justify,
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w500),
-                          )
-                        : Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                bmi == 0 ? "" : "Tình trạng cơ thể:   ",
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w500),
-                              ),
-                              Text(
-                                bodyCondition,
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: bodyConditionColor(bodyCondition)),
-                              )
-                            ],
-                          ),
-                  ),
-                  Container(
-                    margin: bmi == 0
-                        ? EdgeInsets.only(top: 0)
-                        : EdgeInsets.only(top: 15),
-                    child: RichText(
-                      text: TextSpan(
-                        text: bmi == 0 ? "" : "Lời khuyên: ",
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                            fontFamily: 'Montserrat'),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: adviceText,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: Colors.black),
+                              },
+                            ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                ],
+                    Spacer(),
+                    GestureDetector(
+                      onTap: () async {
+                        // service.scheduleNotification(testReminder);
+                        // await service.scheduleReminder(testReminder);
+                        // await service.showScheduledNotification(
+                        //     id: 0,
+                        //     title: "test",
+                        //     body: "day la CareOn",
+                        //     seconds: 5);
+                      },
+                      child: Container(
+                        margin: EdgeInsets.fromLTRB(0, 4, 0, 0),
+                        height: 31,
+                        width: 31,
+                        child: Image.asset('lib/images/bell.png'),
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ),
-            Container(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Nhắc nhở",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-                  )
-                ],
+              Container(
+                margin: EdgeInsets.fromLTRB(0, 0, 30, 29.5),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ReminderPage(),
+                            ));
+                      },
+                      child: CustomButton(
+                        imagePath: "lib/images/reminder.png",
+                        buttonFunctionName: "Nhắc nhở",
+                      ),
+                    ),
+                    Spacer(),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => NotePage(),
+                          ),
+                        );
+                      },
+                      child: CustomButton(
+                          imagePath: "lib/images/note.png",
+                          buttonFunctionName: "Ghi chú"),
+                    ),
+                    Spacer(),
+                    CustomButton(
+                        imagePath: "lib/images/hospital.png",
+                        buttonFunctionName: "Bệnh viện")
+                  ],
+                ),
               ),
-            )
-          ],
+              Container(
+                margin: bmi == 0
+                    ? EdgeInsets.fromLTRB(0, 0, 33, 0)
+                    : EdgeInsets.fromLTRB(0, 0, 33, 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.fromLTRB(0, 0, 0, 14),
+                      child: Text(
+                        'Tình trạng của tôi',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // chieu cao
+                                Container(
+                                  margin: EdgeInsets.fromLTRB(0, 0, 0, 11),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        child: Text(
+                                          'Chiều cao:',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ),
+                                      Container(
+                                        margin:
+                                            EdgeInsets.fromLTRB(22, 0, 0, 0),
+                                        child: FutureBuilder<String>(
+                                          future: getUserHeightFromFirebase(),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return CircularProgressIndicator();
+                                            } else {
+                                              if (snapshot.hasError) {
+                                                return Text(
+                                                    'Error: ${snapshot.error}');
+                                              } else {
+                                                return Text(
+                                                  userHeight + " cm",
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                );
+                                              }
+                                            }
+                                          },
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                // can nang
+                                Container(
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        child: Text("Cân nặng:",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500)),
+                                      ),
+                                      Container(
+                                        margin:
+                                            EdgeInsets.fromLTRB(23, 0, 0, 0),
+                                        child: FutureBuilder<String>(
+                                          future: getUserWeightFromFirebase(),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return CircularProgressIndicator();
+                                            } else {
+                                              if (snapshot.hasError) {
+                                                return Text(
+                                                    'Error: ${snapshot.error}');
+                                              } else {
+                                                return Text(
+                                                  userWeight + " kg",
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                );
+                                              }
+                                            }
+                                          },
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          Container(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Center(
+                                  child: Container(
+                                    margin: EdgeInsets.fromLTRB(0, 0, 0, 3.5),
+                                    child: Text(
+                                      "BMI",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                  ),
+                                ),
+                                Center(
+                                  child: Text(
+                                    bmi.toStringAsFixed(1).toString(),
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 32,
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xff3ab5ff),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      child: bmi == 0
+                          ? Text(
+                              "Hãy cho biết cả chiều cao và cân nặng của bạn ở phần Hồ sơ để biết được tình trạng cơ thể của mình nhé!",
+                              textAlign: TextAlign.justify,
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w500),
+                            )
+                          : Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  bmi == 0 ? "" : "Tình trạng cơ thể:   ",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                Text(
+                                  bodyCondition,
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: bodyConditionColor(bodyCondition)),
+                                )
+                              ],
+                            ),
+                    ),
+                    Container(
+                      margin: bmi == 0
+                          ? EdgeInsets.only(top: 0)
+                          : EdgeInsets.only(top: 15),
+                      child: RichText(
+                        text: TextSpan(
+                          text: bmi == 0 ? "" : "Lời khuyên: ",
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                              fontFamily: 'Montserrat'),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: adviceText,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.black),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     ));

@@ -1,10 +1,12 @@
 import 'package:care_on/components/reminder_tile.dart';
 import 'package:care_on/models/reminder_model.dart';
+import 'package:care_on/noti.dart';
 import 'package:care_on/pages/add_reminder_page.dart';
 import 'package:care_on/pages/navigator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class ReminderPage extends StatefulWidget {
   const ReminderPage({super.key});
@@ -15,7 +17,6 @@ class ReminderPage extends StatefulWidget {
 
 class _ReminderPageState extends State<ReminderPage> {
   List<Reminder> reminderList = [];
-
   void getRemindersFromFirestore() async {
     String userId = FirebaseAuth.instance.currentUser!.uid;
 
@@ -47,6 +48,10 @@ class _ReminderPageState extends State<ReminderPage> {
     // TODO: implement initState
     super.initState();
     getRemindersFromFirestore();
+    // Noti.initialize(flutterLocalNotificationsPlugin);
+    // for (int i = 0; i < reminderList.length; i++){
+
+    // }
   }
 
   @override

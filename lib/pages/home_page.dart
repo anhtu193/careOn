@@ -265,23 +265,6 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     Spacer(),
-                    GestureDetector(
-                      onTap: () async {
-                        // service.scheduleNotification(testReminder);
-                        // await service.scheduleReminder(testReminder);
-                        // await service.showScheduledNotification(
-                        //     id: 0,
-                        //     title: "test",
-                        //     body: "day la CareOn",
-                        //     seconds: 5);
-                      },
-                      child: Container(
-                        margin: EdgeInsets.fromLTRB(0, 4, 0, 0),
-                        height: 31,
-                        width: 31,
-                        child: Image.asset('lib/images/bell.png'),
-                      ),
-                    )
                   ],
                 ),
               ),

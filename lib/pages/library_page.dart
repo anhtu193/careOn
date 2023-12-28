@@ -20,6 +20,13 @@ class _LibraryPageState extends State<LibraryPage> {
       child: Scaffold(
         appBar: AppBar(
             centerTitle: true,
+            leading: IconButton(
+              icon: Icon(
+                Icons.close,
+                color: Colors.white,
+              ),
+              onPressed: () {},
+            ),
             backgroundColor: Color(0xffF4F6FB),
             elevation: 0,
             title: Text(

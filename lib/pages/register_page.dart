@@ -1,6 +1,9 @@
 import 'package:care_on/components/sign_in_button.dart';
 import 'package:care_on/components/square_tile.dart';
 import 'package:care_on/components/textfield.dart';
+import 'package:care_on/pages/login_or_register.dart';
+import 'package:care_on/pages/login_page.dart';
+import 'package:care_on/pages/navigator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -46,6 +49,22 @@ class _RegisterPageState extends State<RegisterPage> {
         Navigator.pop(context);
         //add user detail to Firestore
         addUserDetails(nameController.text, emailController.text);
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+            'Tạo tài khoản thành công!',
+            style: TextStyle(
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.w500,
+                fontSize: 16),
+          ),
+          duration: Duration(seconds: 2), // Thời gian hiển thị SnackBar
+        ));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NavigationPage(),
+          ),
+        );
       } else {
         //pop the loading circle
         Navigator.pop(context);
@@ -74,6 +93,8 @@ class _RegisterPageState extends State<RegisterPage> {
       'UserID': uid,
       'height': "__",
       'weight': "__",
+      'age': '__',
+      'gender': '__',
     });
   }
 
@@ -170,6 +191,7 @@ class _RegisterPageState extends State<RegisterPage> {
               SignInButton(
                 buttonName: 'ĐĂNG KÝ',
                 onTap: signUserUp,
+                width: 307,
               ),
               const SizedBox(
                 height: 192,

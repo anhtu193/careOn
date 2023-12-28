@@ -1,4 +1,6 @@
 import 'package:care_on/pages/edit_user_page.dart';
+import 'package:care_on/pages/forgot_password_page.dart';
+import 'package:care_on/pages/login_or_register.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,6 +24,12 @@ class _UserPageState extends State<UserPage> {
   //sign user out
   void signUserOut() {
     FirebaseAuth.instance.signOut();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LoginOrRegisterPage(),
+      ),
+    );
   }
 
   // Điều hướng đến trang chỉnh sửa thông tin người dùng
@@ -325,27 +333,68 @@ class _UserPageState extends State<UserPage> {
                   SizedBox(
                     height: 24,
                   ),
-                  GestureDetector(
-                    onTap: signUserOut,
-                    child: Container(
-                      height: 28,
-                      width: 128,
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              height: 28,
-                              width: 28,
-                              child: Image.asset("lib/images/logout.png"),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              "Đăng xuất",
-                              style: TextStyle(fontSize: 16),
-                            )
-                          ]),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ForgotPasswordPage(),
+                                ),
+                              );
+                            },
+                            child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    height: 32,
+                                    width: 32,
+                                    child: Image.asset(
+                                        "lib/images/reset-password.png"),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    "Đổi mật khẩu",
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600),
+                                  )
+                                ]),
+                          ),
+                        ),
+                        Container(
+                          height: 28,
+                          width: 128,
+                          child: GestureDetector(
+                            onTap: signUserOut,
+                            child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    height: 28,
+                                    width: 28,
+                                    child: Image.asset("lib/images/logout.png"),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    "Đăng xuất",
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600),
+                                  )
+                                ]),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],

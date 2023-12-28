@@ -335,7 +335,6 @@ class _AddReminderPageState extends State<AddReminderPage> {
         }).catchError((error) {
           print("Lỗi khi cập nhật nhắc nhở: $error");
         });
-        Navigator.pop(context);
       }
     }
   }

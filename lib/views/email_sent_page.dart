@@ -1,5 +1,5 @@
 import 'package:care_on/components/sign_in_button.dart';
-import 'package:care_on/pages/login_or_register.dart';
+import 'package:care_on/views/login_or_register.dart';
 import 'package:flutter/material.dart';
 
 class EmailSentPage extends StatelessWidget {

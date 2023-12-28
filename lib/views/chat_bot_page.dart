@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:care_on/components/messages_screen.dart';
 import 'package:care_on/components/textfield.dart';
-import 'package:care_on/pages/home_page.dart';
-import 'package:care_on/pages/navigator.dart';
+import 'package:care_on/views/home_page.dart';
+import 'package:care_on/views/navigator.dart';
 import 'package:dialog_flowtter/dialog_flowtter.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';

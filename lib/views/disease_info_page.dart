@@ -1,4 +1,5 @@
 import 'package:care_on/models/disease_model.dart';
+import 'package:care_on/presenters/disease_presenter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +12,9 @@ class DiseaseInfoPage extends StatefulWidget {
 }
 
 class _DiseaseInfoPageState extends State<DiseaseInfoPage> {
-  late Future<DocumentSnapshot<Map<String, dynamic>>> diseaseInfo;
+  final DiseasePresenter presenter = DiseasePresenter();
+
+  late Future<Map<String, dynamic>> diseaseInfo;
 
   @override
   void initState() {
@@ -19,20 +22,9 @@ class _DiseaseInfoPageState extends State<DiseaseInfoPage> {
     diseaseInfo = fetchDiseaseInfo();
   }
 
-  Future<DocumentSnapshot<Map<String, dynamic>>> fetchDiseaseInfo() async {
+  Future<Map<String, dynamic>> fetchDiseaseInfo() async {
     try {
-      QuerySnapshot<Map<String, dynamic>> querySnapshot =
-          await FirebaseFirestore.instance
-              .collection('diseases')
-              .where('diseaseName', isEqualTo: widget.diseaseName)
-              .limit(1)
-              .get();
-
-      if (querySnapshot.size > 0) {
-        return querySnapshot.docs.first;
-      } else {
-        throw 'No matching document found';
-      }
+      return await presenter.fetchDiseaseInfo(widget.diseaseName);
     } catch (e) {
       throw e;
     }
@@ -61,7 +53,7 @@ class _DiseaseInfoPageState extends State<DiseaseInfoPage> {
               fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
         ),
       ),
-      body: FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+      body: FutureBuilder<Map<String, dynamic>>(
         future: diseaseInfo,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -72,7 +64,7 @@ class _DiseaseInfoPageState extends State<DiseaseInfoPage> {
             return Center(child: Text('No data available'));
           } else {
             // Lấy thông tin từ snapshot và hiển thị lên các Text
-            var diseaseData = snapshot.data!.data() as Map<String, dynamic>?;
+            var diseaseData = snapshot.data!;
             if (diseaseData != null) {
               String cause = diseaseData['cause'];
               String diagnosis = diseaseData['diagnosis'];

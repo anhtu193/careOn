@@ -1,10 +1,10 @@
-import 'package:care_on/pages/edit_user_page.dart';
-import 'package:care_on/pages/forgot_password_page.dart';
-import 'package:care_on/pages/login_or_register.dart';
+import 'package:care_on/views/edit_user_page.dart';
+import 'package:care_on/views/forgot_password_page.dart';
+import 'package:care_on/views/login_or_register.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:care_on/pages/chat_bot_page.dart';
+import 'package:care_on/views/chat_bot_page.dart';
 
 class UserPage extends StatefulWidget {
   const UserPage({super.key});

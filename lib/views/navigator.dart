@@ -1,7 +1,7 @@
-import 'package:care_on/pages/chat_bot_page.dart';
-import 'package:care_on/pages/home_page.dart';
-import 'package:care_on/pages/library_page.dart';
-import 'package:care_on/pages/user_page.dart';
+import 'package:care_on/views/chat_bot_page.dart';
+import 'package:care_on/views/home_page.dart';
+import 'package:care_on/views/library_page.dart';
+import 'package:care_on/views/user_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';

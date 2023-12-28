@@ -1,5 +1,5 @@
 import 'package:care_on/models/video_model.dart';
-import 'package:care_on/pages/video_player_page.dart';
+import 'package:care_on/views/video_player_page.dart';
 import 'package:flutter/material.dart';
 
 class VideoItem extends StatefulWidget {

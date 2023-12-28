@@ -1,8 +1,8 @@
-import 'package:care_on/pages/tabs/info_tab.dart';
-import 'package:care_on/pages/tabs/video_tab.dart';
+import 'package:care_on/views/tabs/info_tab.dart';
+import 'package:care_on/views/tabs/video_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:care_on/pages/chat_bot_page.dart';
+import 'package:care_on/views/chat_bot_page.dart';
 
 class LibraryPage extends StatefulWidget {
   const LibraryPage({super.key});

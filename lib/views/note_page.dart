@@ -2,9 +2,10 @@ import 'dart:ffi';
 
 import 'package:care_on/components/note_tile.dart';
 import 'package:care_on/models/note_model.dart';
-import 'package:care_on/pages/add_note_page.dart';
-import 'package:care_on/pages/home_page.dart';
-import 'package:care_on/pages/navigator.dart';
+import 'package:care_on/presenters/note_presenter.dart';
+import 'package:care_on/views/add_note_page.dart';
+import 'package:care_on/views/home_page.dart';
+import 'package:care_on/views/navigator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -17,37 +18,19 @@ class NotePage extends StatefulWidget {
 }
 
 class _NotePageState extends State<NotePage> {
+  final NotePresenter _presenter = NotePresenter();
   List<Note> notesList = [];
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getNotesFromFirestore();
+    _initializeNotes();
   }
 
-  String processTextWithLineBreaks(String inputText) {
-    return inputText.replaceAll("<br>", "\n");
-  }
-
-  void getNotesFromFirestore() async {
-    String userId = FirebaseAuth.instance.currentUser!.uid;
-
-    FirebaseFirestore.instance
-        .collection('notes')
-        .where('userId', isEqualTo: userId)
-        .snapshots()
-        .listen((QuerySnapshot snapshot) {
+  void _initializeNotes() {
+    _presenter.getNotes().listen((List<Note> notes) {
       setState(() {
-        notesList.clear();
-        notesList = snapshot.docs.map((DocumentSnapshot document) {
-          return Note(
-              userId: document['userId'],
-              noteId: document['noteId'],
-              title: document['title'],
-              content: processTextWithLineBreaks(document['content']),
-              noteColor: document['noteColor'],
-              createdOn: document['createdOn']);
-        }).toList();
+        notesList = notes;
       });
     });
   }

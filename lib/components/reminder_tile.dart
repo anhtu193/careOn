@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:care_on/models/reminder_model.dart';
-import 'package:care_on/pages/add_reminder_page.dart';
+import 'package:care_on/views/add_reminder_page.dart';
 import 'package:flutter/material.dart';
 
 class ReminderTile extends StatefulWidget {

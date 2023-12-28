@@ -1,6 +1,7 @@
 import 'package:care_on/components/video_item.dart';
 import 'package:care_on/models/video_model.dart';
-import 'package:care_on/pages/video_player_page.dart';
+import 'package:care_on/presenters/video_presenter.dart';
+import 'package:care_on/views/video_player_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -14,23 +15,15 @@ class VideoTab extends StatefulWidget {
 
 class _VideoTabState extends State<VideoTab> {
   List<Video> videoList = [];
+  final VideoPresenter presenter = VideoPresenter();
 
   void getVideosFromFirestore() async {
-    FirebaseFirestore.instance
-        .collection('videos')
-        .snapshots()
-        .listen((QuerySnapshot snapshot) {
+    presenter.getVideos((videos) {
       setState(() {
-        videoList.clear();
-        videoList = snapshot.docs.map((DocumentSnapshot document) {
-          return Video(
-            url: document['url'],
-            title: document['title'],
-            duration: document['duration'],
-            thumbnailUrl: document['thumbnail'],
-          );
-        }).toList();
+        videoList = videos;
       });
+    }, (error) {
+      print('Error fetching videos: $error');
     });
   }
 

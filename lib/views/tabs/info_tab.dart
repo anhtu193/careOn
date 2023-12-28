@@ -1,5 +1,5 @@
 import 'package:care_on/components/alphabet_box.dart';
-import 'package:care_on/pages/disease_list_page.dart';
+import 'package:care_on/views/disease_list_page.dart';
 import 'package:flutter/material.dart';
 
 class InfoTab extends StatefulWidget {

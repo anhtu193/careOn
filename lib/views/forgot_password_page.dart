@@ -1,6 +1,6 @@
 import 'package:care_on/components/sign_in_button.dart';
 import 'package:care_on/components/textfield.dart';
-import 'package:care_on/pages/email_sent_page.dart';
+import 'package:care_on/views/email_sent_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 

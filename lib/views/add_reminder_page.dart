@@ -2,7 +2,8 @@ import 'package:care_on/components/bottom_sheet_data.dart';
 import 'package:care_on/components/description_data.dart';
 import 'package:care_on/components/textfield.dart';
 import 'package:care_on/models/reminder_model.dart';
-import 'package:care_on/pages/reminder_page.dart';
+import 'package:care_on/presenters/reminder_presenter.dart';
+import 'package:care_on/views/reminder_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,6 +21,7 @@ class AddReminderPage extends StatefulWidget {
 }
 
 class _AddReminderPageState extends State<AddReminderPage> {
+  final ReminderPresenter _presenter = ReminderPresenter();
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
   TimeOfDay selectedTime = TimeOfDay.now();
@@ -324,13 +326,8 @@ class _AddReminderPageState extends State<AddReminderPage> {
             timeStart: time,
             userId: userId);
 
-        FirebaseFirestore.instance
-            .collection('reminders')
-            .doc(reminderId)
-            .set(newReminder.toMap())
-            .then((value) {
+        _presenter.addReminder(newReminder).then((_) {
           print("Nhắc nhở đã được cập nhật với ID: $reminderId");
-
           Navigator.pop(context);
         }).catchError((error) {
           print("Lỗi khi cập nhật nhắc nhở: $error");
@@ -340,11 +337,7 @@ class _AddReminderPageState extends State<AddReminderPage> {
   }
 
   void deleteReminderFromFirestore(String reminderId) {
-    FirebaseFirestore.instance
-        .collection('reminders')
-        .doc(reminderId)
-        .delete()
-        .then((value) {
+    _presenter.deleteReminder(reminderId).then((_) {
       print("Nhắc nhở đã được xóa với ID: $reminderId");
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
@@ -363,7 +356,7 @@ class _AddReminderPageState extends State<AddReminderPage> {
         ),
       );
     }).catchError((error) {
-      print("Lỗi khi xóa ghi chú: $error");
+      print("Lỗi khi xóa nhắc nhở: $reminderId");
     });
   }
 

@@ -2,12 +2,12 @@ import 'package:care_on/components/custom_button.dart';
 import 'package:care_on/components/reminder_tile.dart';
 import 'package:care_on/models/reminder_model.dart';
 import 'package:care_on/noti.dart';
-import 'package:care_on/pages/add_note_page.dart';
-import 'package:care_on/pages/note_page.dart';
-import 'package:care_on/pages/reminder_page.dart';
+import 'package:care_on/views/add_note_page.dart';
+import 'package:care_on/views/note_page.dart';
+import 'package:care_on/views/reminder_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:care_on/pages/chat_bot_page.dart';
+import 'package:care_on/views/chat_bot_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 

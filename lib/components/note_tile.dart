@@ -1,5 +1,5 @@
 import 'package:care_on/models/note_model.dart';
-import 'package:care_on/pages/add_note_page.dart';
+import 'package:care_on/views/add_note_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

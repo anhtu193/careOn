@@ -1,5 +1,6 @@
 import 'package:care_on/components/disease_box.dart';
-import 'package:care_on/pages/disease_info_page.dart';
+import 'package:care_on/presenters/disease_presenter.dart';
+import 'package:care_on/views/disease_info_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +14,7 @@ class DiseaseListPage extends StatefulWidget {
 
 class _DiseaseListPageState extends State<DiseaseListPage> {
   late List<String> diseaseNames = [];
+  final DiseasePresenter presenter = DiseasePresenter();
 
   @override
   void initState() {
@@ -23,16 +25,11 @@ class _DiseaseListPageState extends State<DiseaseListPage> {
 
   void fetchDiseasesStartingWithLetter() async {
     try {
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection(
-              'diseases') // Thay 'diseases' bằng tên collection của bạn trong Firestore
-          .where('letter', isEqualTo: widget.letter)
-          .get();
+      List<String> names =
+          await presenter.fetchDiseasesStartingWithLetter(widget.letter);
 
       setState(() {
-        diseaseNames = querySnapshot.docs
-            .map((doc) => doc['diseaseName'] as String)
-            .toList();
+        diseaseNames = names;
       });
     } catch (e) {
       print('Error fetching diseases: $e');

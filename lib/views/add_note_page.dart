@@ -3,7 +3,8 @@
 import 'dart:math';
 
 import 'package:care_on/models/note_model.dart';
-import 'package:care_on/pages/note_page.dart';
+import 'package:care_on/presenters/note_presenter.dart';
+import 'package:care_on/views/note_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,7 @@ class AddNotePage extends StatefulWidget {
 }
 
 class _AddNotePageState extends State<AddNotePage> {
+  final NotePresenter _presenter = NotePresenter();
   final titleController = TextEditingController();
   final contentController = TextEditingController();
   String timestamp = "";
@@ -83,27 +85,17 @@ class _AddNotePageState extends State<AddNotePage> {
           noteColor: noteColor,
           title: titleController.text);
 
-      FirebaseFirestore.instance
-          .collection('notes')
-          .doc(noteId)
-          .set(newNote.toMap())
-          .then((value) {
+      _presenter.addOrUpdateNote(newNote).then((_) {
         print("Ghi chú đã được cập nhật với ID: $noteId");
         Navigator.pop(context);
       }).catchError((error) {
         print("Lỗi khi cập nhật ghi chú: $error");
       });
-
-      Navigator.pop(context);
     }
   }
 
   void deleteNoteFromFirestore(String noteId) {
-    FirebaseFirestore.instance
-        .collection('notes')
-        .doc(noteId)
-        .delete()
-        .then((value) {
+    _presenter.deleteNote(noteId).then((_) {
       print("Ghi chú đã được xóa với ID: $noteId");
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
@@ -122,7 +114,7 @@ class _AddNotePageState extends State<AddNotePage> {
         ),
       );
     }).catchError((error) {
-      print("Lỗi khi xóa ghi chú: $error");
+      print("Lỗi khi xóa ghi chú: $noteId");
     });
   }
 

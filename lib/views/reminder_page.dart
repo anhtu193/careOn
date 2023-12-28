@@ -1,8 +1,9 @@
 import 'package:care_on/components/reminder_tile.dart';
 import 'package:care_on/models/reminder_model.dart';
 import 'package:care_on/noti.dart';
-import 'package:care_on/pages/add_reminder_page.dart';
-import 'package:care_on/pages/navigator.dart';
+import 'package:care_on/presenters/reminder_presenter.dart';
+import 'package:care_on/views/add_reminder_page.dart';
+import 'package:care_on/views/navigator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -16,29 +17,12 @@ class ReminderPage extends StatefulWidget {
 }
 
 class _ReminderPageState extends State<ReminderPage> {
+  final ReminderPresenter presenter = ReminderPresenter();
   List<Reminder> reminderList = [];
   void getRemindersFromFirestore() async {
-    String userId = FirebaseAuth.instance.currentUser!.uid;
-
-    FirebaseFirestore.instance
-        .collection('reminders')
-        .where('userId', isEqualTo: userId)
-        .snapshots()
-        .listen((QuerySnapshot snapshot) {
+    presenter.getReminders().listen((List<Reminder> reminders) {
       setState(() {
-        reminderList.clear();
-        reminderList = snapshot.docs.map((DocumentSnapshot document) {
-          return Reminder(
-            userId: document['userId'],
-            reminderId: document['reminderId'],
-            description: document['description'],
-            needAlarm: document['needAlarm'],
-            onRepeat: document['onRepeat'],
-            reminderOn: document['reminderOn'],
-            timeStart: document['timeStart'],
-            title: document['title'],
-          );
-        }).toList();
+        reminderList = reminders;
       });
     });
   }
@@ -48,10 +32,6 @@ class _ReminderPageState extends State<ReminderPage> {
     // TODO: implement initState
     super.initState();
     getRemindersFromFirestore();
-    // Noti.initialize(flutterLocalNotificationsPlugin);
-    // for (int i = 0; i < reminderList.length; i++){
-
-    // }
   }
 
   @override

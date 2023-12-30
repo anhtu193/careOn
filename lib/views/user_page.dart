@@ -21,6 +21,39 @@ class _UserPageState extends State<UserPage> {
   String height = "165 cm";
   String weight = "60 kg";
 
+  void _confirmSignOut(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "ĐĂNG XUẤT",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          content: Text("Đăng xuất khỏi tài khoản của bạn?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Hủy',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            ),
+            TextButton(
+              onPressed: () {
+                signUserOut();
+              },
+              child: Text(
+                'Đăng xuất',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   //sign user out
   void signUserOut() {
     FirebaseAuth.instance.signOut();
@@ -373,7 +406,9 @@ class _UserPageState extends State<UserPage> {
                           height: 28,
                           width: 128,
                           child: GestureDetector(
-                            onTap: signUserOut,
+                            onTap: () {
+                              _confirmSignOut(context);
+                            },
                             child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [

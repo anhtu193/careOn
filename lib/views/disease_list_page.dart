@@ -65,18 +65,21 @@ class _DiseaseListPageState extends State<DiseaseListPage> {
                   child: ListView.builder(
                     itemCount: diseaseNames.length,
                     itemBuilder: (context, index) {
-                      return DiseaseBox(
-                        diseaseName: diseaseNames[index],
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DiseaseInfoPage(
-                                diseaseName: diseaseNames[index],
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: DiseaseBox(
+                          diseaseName: diseaseNames[index],
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DiseaseInfoPage(
+                                  diseaseName: diseaseNames[index],
+                                ),
                               ),
-                            ),
-                          );
-                        },
+                            );
+                          },
+                        ),
                       );
                     },
                   ),

@@ -3,15 +3,19 @@ import 'package:flutter/material.dart';
 class SignInButton extends StatelessWidget {
   final Function()? onTap;
   final String buttonName;
+  final double width;
   const SignInButton(
-      {super.key, required this.onTap, required this.buttonName});
+      {super.key,
+      required this.onTap,
+      required this.buttonName,
+      required this.width});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 309,
+        width: width,
         height: 50,
         decoration: BoxDecoration(
           color: Color(0xff3ab5ff),

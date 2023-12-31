@@ -1,6 +1,9 @@
 import 'package:care_on/components/sign_in_button.dart';
 import 'package:care_on/components/square_tile.dart';
 import 'package:care_on/components/textfield.dart';
+import 'package:care_on/views/login_or_register.dart';
+import 'package:care_on/views/login_page.dart';
+import 'package:care_on/views/navigator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -46,6 +49,22 @@ class _RegisterPageState extends State<RegisterPage> {
         Navigator.pop(context);
         //add user detail to Firestore
         addUserDetails(nameController.text, emailController.text);
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+            'Tạo tài khoản thành công!',
+            style: TextStyle(
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.w500,
+                fontSize: 16),
+          ),
+          duration: Duration(seconds: 2), // Thời gian hiển thị SnackBar
+        ));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NavigationPage(),
+          ),
+        );
       } else {
         //pop the loading circle
         Navigator.pop(context);
@@ -72,6 +91,10 @@ class _RegisterPageState extends State<RegisterPage> {
       'Name': name,
       'Email': email,
       'UserID': uid,
+      'height': "__",
+      'weight': "__",
+      'age': '__',
+      'gender': '__',
     });
   }
 
@@ -119,6 +142,7 @@ class _RegisterPageState extends State<RegisterPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40.0),
                 child: MyTextField(
+                  inputType: TextInputType.text,
                   controller: nameController,
                   hintText: 'Họ tên',
                   obscureText: false,
@@ -130,6 +154,7 @@ class _RegisterPageState extends State<RegisterPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40.0),
                 child: MyTextField(
+                  inputType: TextInputType.text,
                   controller: emailController,
                   hintText: 'Email',
                   obscureText: false,
@@ -141,6 +166,7 @@ class _RegisterPageState extends State<RegisterPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40.0),
                 child: MyTextField(
+                  inputType: TextInputType.text,
                   controller: passwordController,
                   hintText: 'Mật khẩu',
                   obscureText: true,
@@ -152,6 +178,7 @@ class _RegisterPageState extends State<RegisterPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40.0),
                 child: MyTextField(
+                  inputType: TextInputType.text,
                   controller: repeatPasswordController,
                   hintText: 'Nhập lại mật khẩu',
                   obscureText: true,
@@ -164,6 +191,7 @@ class _RegisterPageState extends State<RegisterPage> {
               SignInButton(
                 buttonName: 'ĐĂNG KÝ',
                 onTap: signUserUp,
+                width: 307,
               ),
               const SizedBox(
                 height: 192,

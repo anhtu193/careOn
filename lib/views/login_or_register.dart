@@ -1,5 +1,5 @@
-import 'package:care_on/pages/login_page.dart';
-import 'package:care_on/pages/register_page.dart';
+import 'package:care_on/views/login_page.dart';
+import 'package:care_on/views/register_page.dart';
 import 'package:flutter/material.dart';
 
 class LoginOrRegisterPage extends StatefulWidget {

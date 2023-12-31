@@ -1,6 +1,9 @@
 import 'package:care_on/components/sign_in_button.dart';
 import 'package:care_on/components/square_tile.dart';
 import 'package:care_on/components/textfield.dart';
+import 'package:care_on/views/email_sent_page.dart';
+import 'package:care_on/views/forgot_password_page.dart';
+import 'package:care_on/views/navigator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +21,8 @@ class _LoginPageState extends State<LoginPage> {
 
   final passwordController = TextEditingController();
 
+  bool isHidden = false;
+
   void signUserIn() async {
     // show loading circle
     showDialog(
@@ -34,6 +39,12 @@ class _LoginPageState extends State<LoginPage> {
           email: emailController.text, password: passwordController.text);
       //pop the loading circle
       Navigator.pop(context);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => NavigationPage(),
+        ),
+      );
     } on FirebaseAuthException catch (e) {
       //pop the loading circle
       Navigator.pop(context);
@@ -53,6 +64,19 @@ class _LoginPageState extends State<LoginPage> {
         );
       },
     );
+  }
+
+  void toggleVisibleState() {
+    setState(() {
+      isHidden = !isHidden;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    isHidden = true;
   }
 
   @override
@@ -78,6 +102,7 @@ class _LoginPageState extends State<LoginPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40),
                 child: MyTextField(
+                  inputType: TextInputType.text,
                   controller: emailController,
                   hintText: 'Email',
                   obscureText: false,
@@ -88,10 +113,32 @@ class _LoginPageState extends State<LoginPage> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40),
-                child: MyTextField(
-                  controller: passwordController,
-                  hintText: 'Mật khẩu',
-                  obscureText: true,
+                child: Stack(
+                  alignment: Alignment.bottomRight,
+                  children: [
+                    MyTextField(
+                      inputType: TextInputType.text,
+                      controller: passwordController,
+                      hintText: 'Mật khẩu',
+                      obscureText: isHidden,
+                    ),
+                    Positioned(
+                      bottom: 12,
+                      right: 15,
+                      child: GestureDetector(
+                        onTap: () {
+                          toggleVisibleState();
+                        },
+                        child: SizedBox(
+                          height: 25,
+                          width: 25,
+                          child: isHidden == false
+                              ? Image.asset("lib/images/hidden.png")
+                              : Image.asset("lib/images/visible.png"),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               ),
               Padding(
@@ -100,12 +147,22 @@ class _LoginPageState extends State<LoginPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text(
-                      'Quên mật khẩu?',
-                      style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xff3bb5ff)),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ForgotPasswordPage(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        'Quên mật khẩu?',
+                        style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xff3bb5ff)),
+                      ),
                     ),
                   ],
                 ),
@@ -116,43 +173,11 @@ class _LoginPageState extends State<LoginPage> {
               SignInButton(
                 buttonName: 'ĐĂNG NHẬP',
                 onTap: signUserIn,
+                width: 309,
               ),
               const SizedBox(
-                height: 33,
+                height: 128,
               ),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: Divider(
-                      thickness: 0.5,
-                      color: Color(0xffb6b6b6),
-                    )),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Text(
-                        'or',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xffb7b7b8)),
-                      ),
-                    ),
-                    Expanded(
-                        child: Divider(
-                      thickness: 0.5,
-                      color: Color(0xffb6b6b6),
-                    ))
-                  ],
-                ),
-              ),
-
-              // google sign in
-              Container(
-                  padding: EdgeInsets.fromLTRB(27, 27, 27, 27),
-                  child: SquareTile(imagePath: 'lib/images/gmail.png')),
 
               //Chua co tai khoan ? Dang ki ngay
               Row(
